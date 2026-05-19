@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Money Voice</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+        body{
+            background:#f2f2f2;
+            font-family:Arial;
+        }
+        .container{
+            width:100%;
+            height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+        }
+        .box{
+            background:white;
+            padding:30px;
+            border-radius:10px;
+            box-shadow:0px 0px 10px rgba(0,0,0,0.2);
+        }
+        table{
+            border-collapse:collapse;
+        }
+        td{
+            padding:10px;
+        }
+        input{
+            width:250px;
+            padding:10px;
+            font-size:18px;
+        }
+        button{
+            width:100%;
+            padding:10px;
+            font-size:18px;
+            cursor:pointer;
+            border:none;
+            background:black;
+            color:white;
+            border-radius:5px;
+        }
+        button:hover{
+            opacity:0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="box">
+            <form method="POST" action="/voice">
+                <table>
+                    <tr>
+                        <td>
+                            <h2>Enter Money :</h2>
+                        </td>
+                        <td>
+                            <input 
+                                type="number"
+                                name="input_money"
+                                min="1"
+                                max="9999999"
+                                value="{{ money | default('') }}"
+                                required
+                            >
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <button type="submit">
+                                SUBMIT
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+    <script>
+
+        let audio_list = {{ send_list | tojson }};
+        let index = 0;
+        let audio = new Audio();
+        function playAudio(){
+            if(index < audio_list.length){
+                audio.src = "/static/" + audio_list[index];
+                audio.play();
+                index++;
+            }
+        }
+        audio.addEventListener("ended", playAudio);
+        if(audio_list.length > 0){
+            playAudio();
+        }
+
+    </script>
+
+</body>
+</html>
